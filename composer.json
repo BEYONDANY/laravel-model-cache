@@ -21,7 +21,7 @@
     ],
     "require": {
         "php": ">=8.1",
-        "genealabs/laravel-pivot-events": "^10.0|^11.0",
+        "genealabs/laravel-pivot-events": "^11.0",
         "illuminate/cache": "^10.0|^11.0",
         "illuminate/config": "^10.0|^11.0",
         "illuminate/console": "^10.0|^11.0",
@@ -50,7 +50,7 @@
             "tests/database/seeds"
         ],
         "psr-4": {
-            "GeneaLabs\\LaravelModelCaching\\Tests\\": "tests/"
+            "Xuhaohao\\LaravelModelCache\\Tests\\": "tests/"
         }
     },
     "extra": {
