@@ -45,16 +45,6 @@
         "symfony/thanks": "^1.2",
         "laravel/legacy-factories": "^1.0"
     },
-
-    "autoload-dev": {
-        "classmap": [
-            "tests/database/factories",
-            "tests/database/seeds"
-        ],
-        "psr-4": {
-            "Xuhaohao\\LaravelModelCache\\Tests\\": "tests/"
-        }
-    },
     "extra": {
         "laravel": {
             "providers": [
