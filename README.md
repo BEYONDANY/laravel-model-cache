@@ -1,2 +1,2 @@
 # laravel-model-cache
-auto cacheing mode db
+auto caching mode db
