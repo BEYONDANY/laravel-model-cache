@@ -303,9 +303,14 @@ trait Buildable
             $this->checkCooldownAndRemoveIfExpired($this->getModel());
         }
 
+        $expiredSeconds = Container::getInstance()
+            ->make("config")
+            ->get("laravel-model-caching.cache-expired-seconds");
+
         return $this->cache($cacheTags)
-            ->rememberForever(
+            ->remember(
                 $hashedCacheKey,
+                $expiredSeconds,
                 function () use ($arguments, $cacheKey, $method) {
                     return [
                         "key" => $cacheKey,

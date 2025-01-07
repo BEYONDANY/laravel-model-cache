@@ -43,15 +43,19 @@ trait ModelCaching
         $class = get_called_class();
         $instance = new $class;
 
-	    if (!$instance->isCachable()) {
-		    return parent::all($columns);
-	    }
+        if (!$instance->isCachable()) {
+            return parent::all($columns);
+        }
 
         $tags = $instance->makeCacheTags();
         $key = $instance->makeCacheKey();
 
+        $expiredSeconds = Container::getInstance()
+            ->make("config")
+            ->get("laravel-model-caching.cache-expired-seconds");
+
         return $instance->cache($tags)
-            ->rememberForever($key, function () use ($columns) {
+            ->remember($key, $expiredSeconds, function () use ($columns) {
                 return parent::all($columns);
             });
     }
@@ -75,9 +79,9 @@ trait ModelCaching
         //     $instance->checkCooldownAndFlushAfterPersisting($instance);
         // });
 
-        static::pivotSynced(function ($instance, $relationship) {
-            $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
-        });
+//        static::pivotSynced(function ($instance, $relationship) {
+//            $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
+//        });
 
         static::pivotAttached(function ($instance, $relationship) {
             $instance->checkCooldownAndFlushAfterPersisting($instance, $relationship);
@@ -103,7 +107,7 @@ trait ModelCaching
 
     public function newEloquentBuilder($query)
     {
-        if (! $this->isCachable()) {
+        if (!$this->isCachable()) {
             $this->isCachable = false;
 
             return new EloquentBuilder($query);
@@ -149,7 +153,7 @@ trait ModelCaching
         );
     }
 
-    public function scopeDisableCache(EloquentBuilder $query) : EloquentBuilder
+    public function scopeDisableCache(EloquentBuilder $query): EloquentBuilder
     {
         if ($this->isCachable()) {
             $query = $query->disableModelCaching();
@@ -161,8 +165,8 @@ trait ModelCaching
     public function scopeWithCacheCooldownSeconds(
         EloquentBuilder $query,
         int $seconds = null
-    ) : EloquentBuilder {
-        if (! $seconds) {
+    ): EloquentBuilder {
+        if (!$seconds) {
             $seconds = $this->cacheCooldownSeconds;
         }
 
