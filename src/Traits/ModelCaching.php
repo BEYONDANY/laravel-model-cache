@@ -50,9 +50,7 @@ trait ModelCaching
         $tags = $instance->makeCacheTags();
         $key = $instance->makeCacheKey();
 
-        $expiredSeconds = Container::getInstance()
-            ->make("config")
-            ->get("laravel-model-caching.cache-expired-seconds");
+        $expiredSeconds = $instance->getCacheExpiredSeconds();
 
         return $instance->cache($tags)
             ->remember($key, $expiredSeconds, function () use ($columns) {
